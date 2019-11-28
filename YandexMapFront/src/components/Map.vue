@@ -39,7 +39,7 @@
                         </tr>
                     </thead>
                     <tr v-for="mark in marks">
-                        <td scope="col">{{ mark.name }} </td>
+                        <td v-on:click="movemap("+ {{ mark.name }} + ")" scope="col">{{ mark.name }} </td>
                         <td scope="col">{{ mark.longitude }} </td>
                         <td scope="col">{{ mark.latitude }} </td>
                         <td scope="col">
@@ -55,9 +55,8 @@
             </div>
 
             <div class="map-container col-md-8" >
-                <yandex-map :coords="coords" style="height:600px">
+                <yandex-map v-for="mark in marks" :coords="coords" style="height:600px">
                     <ymap-marker
-                        v-for="mark in marks"
                         marker-id={{ mark.name }}
                         :coords ="[mark.longitude , mark.latitude]">
                     </ymap-marker>
@@ -75,7 +74,7 @@
 
 
     export default {
-        components: { yandexMap, ymapMarker },
+        components: { yandexMap, ymapMarker, loadYmap },
 
          data: () => ({
              coords: [54, 39],
@@ -86,7 +85,7 @@
         }),
 
          methods: {
-            add: function (event) {
+            add: function () {
                 axios
                     .post("/add", {
                         params: {
@@ -102,18 +101,20 @@
                     }))
              },
 
-             remove: function (event) {
+             remove: function () {
                  axios
                      .delete("/delete")
                      .then()
+             },
+
+             movemap: function (name) {
+                 var pos = marks.find(elem => elem.name == name);
+                 this.coords = [pos.longitude, pos.latitude];
              }
         },
 
         mounted() {
-            var location = yandexMap.location.get();
-            location.then((res) => {
-                alert(res);
-            }); 
+            loadYmap();
 
             axios
                 .get("/get-marks")

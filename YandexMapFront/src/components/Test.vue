@@ -1,4 +1,4 @@
-п»ї<template>
+<template>
     <div class="home">
 
         <div class="row">
@@ -7,33 +7,33 @@
                 <div class="add-location-container">
                     <form>
                         <div class="form-group">
-                            <p>Р”РѕР»РіРѕС‚Р°</p>
+                            <p>Долгота</p>
                             <input v-model="longitude" type="text" />
                         </div>
 
                         <div class="form-group">
-                            <p>РЁРёСЂРѕС‚Р°</p>
+                            <p>Широта</p>
                             <input v-model="latitude" type="text" />
                         </div>
 
                         <div class="form-group">
-                            <p>РќР°Р·РІР°РЅРёРµ</p>
+                            <p>Название</p>
                             <input v-model="name" type="text" />
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" v-on:click="add" value="Р”РѕР±Р°РІРёС‚СЊ"/>
+                            <input type="submit" v-on:click="add" value="Добавить" />
                         </div>
                     </form>
-                    
+
                 </div>
 
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">РќР°Р·РІР°РЅРёРµ</th>
-                            <th scope="col">Р”РѕР»РіРѕС‚Р°</th>
-                            <th scope="col">РЁРёСЂРѕС‚Р°</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Долгота</th>
+                            <th scope="col">Широта</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -43,10 +43,10 @@
                         <td scope="col">{{ mark.longitude }} </td>
                         <td scope="col">{{ mark.latitude }} </td>
                         <td scope="col">
-                            <button class="btn btn-primary">Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</button>
+                            <button class="btn btn-primary">Редактировать</button>
                         </td>
                         <td scope="col">
-                            <button class="btn btn-danger" v-on:click="remove(mark.name)">РЈРґР°Р»РёС‚СЊ</button>
+                            <button class="btn btn-danger" v-on:click="remove(mark.name)">Удалить</button>
                         </td>
                     </tr>
                 </table>
@@ -54,18 +54,15 @@
 
             </div>
 
-            <div class="map-container col-md-8" >
-                <yandex-map
-                            :coords="coords"
-                            style="height:600px"
-                            v-on:map-was-initialized="initmap">
-                    <ymap-marker
-                        v-for="mark in marks"
-                        v-bind:key="mark.name"
-                        :marker-id="mark.name"
-                        :coords ="[mark.longitude , mark.latitude]"
-                        :balloon ="{header: mark.name }"
-                    />
+            <div class="map-container col-md-8">
+                <yandex-map :coords="coords" style="height:600px">
+                        <ymap-marker marker-id='1'
+                                     :coords="[10 , 20]">
+                        </ymap-marker>
+                    
+                    <ymap-marker marker-id='2'
+                                 :coords="[15 , 25]">
+                    </ymap-marker>
                 </yandex-map>
             </div>
         </div>
@@ -82,12 +79,11 @@
         components: { yandexMap, ymapMarker, loadYmap },
 
          data: () => ({
-             coords: [0, 0],
+             coords: [54, 39],
              longitude: null,
              latitude: null,
              name: null,
-             marks: [],
-             test: null
+             marks: []
         }),
 
          methods: {
@@ -131,21 +127,10 @@
 
              movemap: function (longitude, latitude) {
                  this.coords = [longitude, latitude];
-             },
-
-             initmap: function (payload) {
-                 this.test = payload;
-                 var location = payload.geolocation.get();
-                 location.then(result => {
-                     alert(result.geoObjects.get(0).geometry.getCoordinates());
-                 });
              }
-
         },
 
         mounted() {
-            loadYmap();
-            this.test = ymaps;
             axios
                 .get("/get-marks")
                 .then(responce => this.marks = responce)

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import HomeVue from './components/Home.vue';
 import LoginVue from './components/Login.vue';
 import MapVue from './components/Map.vue';
+import TestVue from './components/Test.vue'
 import BootstrapVue from 'bootstrap-vue'
 
 import YmapPlugin from 'vue-yandex-maps'
@@ -39,6 +40,10 @@ const router = new Router({
         {
             path: '/map',
             component: MapVue
+        },
+        {
+            path: '/test',
+            component: TestVue
         }
 
     ]

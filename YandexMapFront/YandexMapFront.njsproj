@@ -40,6 +40,7 @@
     <Content Include="src\components\Map.vue">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\components\Test.vue" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />
